@@ -1,0 +1,146 @@
+// 通用mixin函数
+.m_ellipsis(@lineNum) when (@lineNum = 1) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.m_ellipsis(@lineNum) when (@lineNum > 1) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: @lineNum;
+  -webkit-box-orient: vertical;
+}
+
+.m_flex(@dir: row, @justify: center, @align: center) {
+  display: flex;
+  flex-direction: @dir;
+  align-items: @align;
+  justify-content: @justify;
+}
+
+.m_wh(@width, @height: @width, @bg: none) {
+  width: @width;
+  height: @height;
+  background: @bg;
+}
+
+.m_wh_bg(@width, @height: @width, @bg: none) {
+  width: @width;
+  height: @height;
+  background-image: url(@bg);
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
+.m_font(@size, @color, @weight: 400) {
+  font-size: @size;
+  color: @color;
+  font-weight: @weight;
+}
+
+.wh_center(@width, @height) {
+  width: @width;
+  height: @height;
+  line-height: @height;
+  text-align: center;
+}
+
+.m_circle(@length, @bg: none) {
+  width: @length;
+  height: @length;
+  border-radius: 50%;
+  background: @bg;
+}
+
+.m_btn(@width, @height, @bg: @color_primary, @borderRadius: "") {
+  width: @width;
+  height: @height;
+  line-height: @height;
+  text-align: center;
+  border-radius: @borderRadius;
+  background: @bg;
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+
+.m_clearfix {
+  &:after {
+    clear: both;
+    content: "";
+    display: block;
+    height: 0;
+    line-height: 0;
+    overflow: hidden;
+  }
+  *height: 1%;
+}
+.m_position(
+  @position: relative,
+  @top: "",
+  @right: "",
+  @bottom: "",
+  @left: ""
+) {
+  position: @position;
+  left: @left;
+  right: @right;
+  top: @top;
+  bottom: @bottom;
+}
+
+.m_placeholder(@fz, @color: #999, @align: left, @fontFamily) {
+  &:-moz-placeholder {
+    font-size: @fz;
+    color: @color;
+    text-align: @align;
+    font-family: @fontFamily;
+  }
+  &:-ms-input-placeholder {
+    font-size: @fz;
+    color: @color;
+    text-align: @align;
+    font-family: @fontFamily;
+  }
+  &::-webkit-input-placeholder {
+    font-size: @fz;
+    color: @color;
+    text-align: @align;
+    font-family: @fontFamily;
+  }
+}
+
+// 背景图片地址和大小
+.m_bg(@url) {
+  background-image: url(@url);
+  background-repeat: no-repeat;
+  background-size: 100% 100%;
+}
+
+.m_cover {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+.m_absolute_center {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.m_border_1px(@position: bottom, @color: #EAEAEA, @height: 1px, @width: 100%) {
+  position: relative;
+  &::after {
+    content: " ";
+    display: block;
+    position: absolute;
+    @{position}: 0;
+    left: 0;
+    width: @width;
+    height: @height;
+    background-color: @color;
+    transform: scaleY(0.5);
+  }
+}
