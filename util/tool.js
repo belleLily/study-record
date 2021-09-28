@@ -2,65 +2,54 @@
  * @desc 函数防抖
  * @param { function } func
  * @param { number } wait 延迟执行毫秒数
- * @param { boolean } immediate  true 表立即执行，false 表非立即执行
  */
-export function debounce(func, wait = 500, immediate = false) {
+export function debounce(func, wait = 500) {
   let timeout;
-  let wait = wait || 1000;
   return function () {
     let context = this;
     let args = arguments;
 
     if (timeout) clearTimeout(timeout);
-    if (immediate) {
-      let callNow = !timeout;
-      timeout = setTimeout(() => {
-        timeout = null;
-      }, wait);
-      if (callNow) func.apply(context, args);
-    } else {
-      timeout = setTimeout(() => {
-        func.apply(context, args);
-      }, wait);
-    }
+    timeout = setTimeout(() => {
+      func.apply(context, args);
+    }, wait);
   };
 }
 
 /**
  * @desc 函数节流
- * @param { function } func 函数
- * @param { number } wait 延迟执行毫秒数
- * @param { number } type 1 表时间戳版，2 表定时器版
+ * @param { function } fn 函数
+ * @param { number } delay 延迟执行毫秒数
  */
-export function throttle(func, wait, type) {
-  let previous, timeout;
-  if (type === 1) {
-    previous = 0;
-  } else if (type === 2) {
-    timeout = null;
-  }
-  return function () {
-    let context = this;
-    let args = arguments;
-    if (type === 1) {
-      let now = Date.now();
+export function throttle(fn, delay) {
+  let timer;
+  let prevTime;
+  return function (...args) {
+    const currTime = Date.now();
+    const context = this;
+    if (!prevTime) prevTime = currTime;
+    clearTimeout(timer);
 
-      if (now - previous > wait) {
-        func.apply(context, args);
-        previous = now;
-      }
-    } else if (type === 2) {
-      if (!timeout) {
-        timeout = setTimeout(() => {
-          timeout = null;
-          func.apply(context, args);
-        }, wait);
-      }
+    if (currTime - prevTime > delay) {
+      prevTime = currTime;
+      fn.apply(context, args);
+      clearTimeout(timer);
+      return;
     }
+
+    timer = setTimeout(function () {
+      prevTime = Date.now();
+      timer = null;
+      fn.apply(context, args);
+    }, delay);
   };
 }
 
-//得到类型
+/**
+ * @description: 判断类型
+ * @param {*}
+ * @return {*}
+ */
 export const type = (obj) => {
   let typeStr = Object.prototype.toString.call(obj).split(" ")[1];
   return typeStr.substr(0, typeStr.length - 1).toLowerCase();
@@ -154,10 +143,12 @@ export const getStyle = (element, attr) => {
   }
 };
 
-export const toRGB = (color) => {
+const toRGB = (color, opacity) => {
+  color = color.replace(/#/g, "");
   let num = parseInt(color, 16);
-  return [num >> 16, (num >> 8) & 255, num & 255];
+  return `rgba(${num >> 16},${(num >> 8) & 255},${num & 255},${opacity})`;
 };
+
 //  F9C90C->rgba(249, 201, 12, 1)
 
 export const toHex = (red, green, blue) => {
@@ -170,4 +161,25 @@ export const toUpperChinese = (str) => {
     return arr[arguments[0]];
   });
   return str;
+};
+
+/**
+ * @description: 用*替代指定位置的字符串，中间部分不包括-
+ * @param {string} chart 指定字符串
+ * @param {*} begin 起始位置，默认为3
+ * @param {*} end   结束位置，默认为4
+ * @return {*} *替代后的字符串
+ */
+export const encrypChart = (chart, begin = 3, end = 4) => {
+  const reg = new RegExp("(?<=.{" + begin + "})[^-](?=.{" + end + "})", "g");
+  return chart ? chart.replace(reg, "*") : null;
+};
+
+export const encrypName = (name) => {
+  if (name) {
+    return name.length > 2
+      ? name.replace(/(?<=.).(?=.)/g, "*")
+      : name.replace(/.(?=.)/g, "*");
+  }
+  return null;
 };

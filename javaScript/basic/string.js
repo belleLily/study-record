@@ -97,3 +97,45 @@ console.log(j); //2
 console.log(k); //2
 
 // 运算符优先级 https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Operators/Operator_Precedence
+
+正则;
+字符串的正则: match, replace, search, split; //String.prototype.match 调用 RegExp.prototype[Symbol.match]
+修饰符;
+// Unicode 模式
+u;
+// y修饰符确保匹配必须从剩余的第一个位置开始
+// 正则lastIndex属性可以表示匹配从第几个位置开始
+y;
+// s修饰符，使得.可以匹配任意单个字符
+s;
+
+断言;
+// 先行断言(?=)只匹配百分号之前的数字（不包括%），/\d+(?=%)/
+// 先行否定断言(?!)只匹配不在百分号之前的数字， /\d+(?!%)/
+// 后行断言(?<=)只匹配美元符号之后的数字，/(?<=\$)\d+/
+// 后行否定断言(?<!)只匹配不在美元符号之后的数字，/(?<!\$)\d+/
+
+具名组匹配; //问号 + 尖括号 + 组名
+const RE_DATE = /(?<year>\d{4})-(?<month>\d{2})-(?<day>\d{2})/;
+const matchObj = RE_DATE.exec("1999-12-31");
+const year = matchObj.groups.year; // "1999"
+const month = matchObj.groups.month; // "12"
+const day = matchObj.groups.day; // "31"
+//字符串替换时，使用$<组名>引用具名组。
+let re = /(?<year>\d{4})-(?<month>\d{2})-(?<day>\d{2})/u;
+"2015-01-02".replace(re, "$<day>/$<month>/$<year>");
+"2015-01-02".replace(
+  re,
+  (
+    matched, // 整个匹配结果 2015-01-02
+    capture1, // 第一个组匹配 2015
+    capture2, // 第二个组匹配 01
+    capture3, // 第三个组匹配 02
+    position, // 匹配开始的位置 0
+    S, // 原字符串 2015-01-02
+    groups // 具名组构成的一个对象 {year, month, day}
+  ) => {
+    let { day, month, year } = groups;
+    return `${day}/${month}/${year}`;
+  }
+);

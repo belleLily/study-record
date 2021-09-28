@@ -1,7 +1,7 @@
 //去重
-export const arrayUnique = (arr,type) => {
+export const arrayUnique = (arr, type) => {
   if (!Array.isArray(arr)) {
-    throw new Error('arguments must a array')
+    throw new Error("arguments must a array");
   }
   if (arr.length <= 1) {
     return arr;
@@ -40,6 +40,35 @@ export const getDifferenceSetB = (arr1, arr2, typeName) => {
       .concat(arr2)
       .filter(function (v, i, arr) {
         return arr.indexOf(v) === arr.lastIndexOf(v);
+      })
+      .map(JSON.parse);
+  }
+};
+
+//差集
+export const getDifferenceSet = (arr1, arr2, typeName) => {
+  if (typeName) {
+    return Object.values(
+      arr1.concat(arr2).reduce((acc, cur) => {
+        if (
+          (acc[cur[typeName]] &&
+              acc[cur[typeName]][typeName] === cur[typeName]) ||
+              arr2.find((item)=>cur[typeName] === item[typeName]) //arr2存在的元素
+        ) {
+          delete acc[cur[typeName]];
+        } else {
+          acc[cur[typeName]] = cur;
+        }
+        return acc;
+      }, {})
+    );
+  } else {
+    arr1 = arr1.map(JSON.stringify);
+    arr2 = arr2.map(JSON.stringify);
+    return arr1
+      .concat(arr2)
+      .filter(function (v, i, arr) {
+        return arr.indexOf(v) === arr.lastIndexOf(v) && !arr2.includes(v);
       })
       .map(JSON.parse);
   }
@@ -84,6 +113,16 @@ export const deleteElementsByIds = (a, b, type) => {
       }
     });
   });
+};
+
+//并集
+export const intersectArr = (a, b, type) => {
+  const arr = a.concat(b);
+  const obj = {};
+  return arr.reduce(function (pre, cur) {
+    obj.hasOwnProperty(cur[type]) ? pre.push(cur) : (obj[cur[type]] = true);
+    return pre;
+  }, []);
 };
 
 //得到某对象在数组里的索引
