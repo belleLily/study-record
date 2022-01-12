@@ -17,34 +17,6 @@ export const arrayUnique = (arr, type) => {
   }
 };
 
-//两个数组 or 对象数组的差集
-export const getDifferenceSetB = (arr1, arr2, typeName) => {
-  if (typeName) {
-    return Object.values(
-      arr1.concat(arr2).reduce((acc, cur) => {
-        if (
-          acc[cur[typeName]] &&
-          acc[cur[typeName]][typeName] === cur[typeName]
-        ) {
-          delete acc[cur[typeName]];
-        } else {
-          acc[cur[typeName]] = cur;
-        }
-        return acc;
-      }, {})
-    );
-  } else {
-    arr1 = arr1.map(JSON.stringify);
-    arr2 = arr2.map(JSON.stringify);
-    return arr1
-      .concat(arr2)
-      .filter(function (v, i, arr) {
-        return arr.indexOf(v) === arr.lastIndexOf(v);
-      })
-      .map(JSON.parse);
-  }
-};
-
 //差集
 export const getDifferenceSet = (arr1, arr2, typeName) => {
   if (typeName) {
@@ -52,8 +24,8 @@ export const getDifferenceSet = (arr1, arr2, typeName) => {
       arr1.concat(arr2).reduce((acc, cur) => {
         if (
           (acc[cur[typeName]] &&
-              acc[cur[typeName]][typeName] === cur[typeName]) ||
-              arr2.find((item)=>cur[typeName] === item[typeName]) //arr2存在的元素
+            acc[cur[typeName]][typeName] === cur[typeName]) ||
+          arr2.find((item) => cur[typeName] === item[typeName]) //arr2存在的元素
         ) {
           delete acc[cur[typeName]];
         } else {
@@ -123,6 +95,19 @@ export const intersectArr = (a, b, type) => {
     obj.hasOwnProperty(cur[type]) ? pre.push(cur) : (obj[cur[type]] = true);
     return pre;
   }, []);
+};
+
+//交集
+export const crossArr = (arr1, arr2, type) => {
+  if (type) {
+    return arr1.filter((v1) => {
+      return arr2.find((v2) => v1[type] === v2[type]);
+    });
+  } else {
+    return Array.from(
+      new Set([...arr1].filter((x) => new Set([...arr2]).has(x)))
+    );
+  }
 };
 
 //得到某对象在数组里的索引

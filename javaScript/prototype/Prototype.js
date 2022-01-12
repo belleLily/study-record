@@ -23,7 +23,6 @@ function Woman() {
   this.sex = "女";
 }
 Woman.prototype.showSex = function () {
-  //invalid
   console.log(this.sex);
 };
 //1.w是Woman的实例对象，可以访问Woman原型属性和方法
