@@ -8,16 +8,16 @@ var lengthOfLastWord = function (s) {
 };
 
 var lengthOfLastWord = function (s) {
-    var idx = s.length - 1;
-    while (s[idx] === " ") {
-      idx--;
-    }
-    var wordLen = 0;
-    while (idx >= 0 && s[idx] !== ' ') {
-        wordLen++
-        idx--
-    }
-    return wordLen
+  var idx = s.length - 1;
+  while (s[idx] === " ") {
+    idx--;
+  }
+  var wordLen = 0;
+  while (idx >= 0 && s[idx] !== " ") {
+    wordLen++;
+    idx--;
+  }
+  return wordLen;
 };
 console.log(lengthOfLastWord("   fly me   to   the moon  "));
 console.log(lengthOfLastWord("luffy is still joyboy"));
