@@ -90,11 +90,15 @@ export const deleteElementsByIds = (a, b, type) => {
 //并集
 export const intersectArr = (a, b, type) => {
   const arr = a.concat(b);
-  const obj = {};
-  return arr.reduce(function (pre, cur) {
-    obj.hasOwnProperty(cur[type]) ? pre.push(cur) : (obj[cur[type]] = true);
-    return pre;
-  }, []);
+  if (type) {
+    const obj = {};
+    return arr.reduce(function (pre, cur) {
+      obj.hasOwnProperty(cur[type]) ? pre.push(cur) : (obj[cur[type]] = true);
+      return pre;
+    }, []);
+  } else {
+    return Array.from(new Set(arr))
+  }
 };
 
 //交集

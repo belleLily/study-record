@@ -1,3 +1,5 @@
+// 每次都示例化一个class，不推荐
+
 import axios from 'axios'
 const VUE_APP_URL = process.env.VUE_APP_URL
 

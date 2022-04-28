@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vue</title>
+  </head>
+
+  <body>
+    <div id="app">
+      <parent v-if="show" @hide="hide"></parent>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <!-- <script src="./vue.js"></script> -->
+    <script>
+      Vue.component("parent", {
+        template: `<div @click="hide">
+                            <div>parent</div>
+                            <son v-for="item in items" :key="item" :itemValue="item">
+                                initContent:{{item}}
+                                <template v-slot:sonSlot="itemProps">
+                                    {{itemProps.value}}
+                                </template>
+                            </son>
+                        </div>`,
+        data() {
+          return {
+            items: ["honey"],
+          };
+        },
+        beforeCreate() {
+          console.log("parent beforeCreate");
+        },
+        created() {
+          console.log("parent created");
+        },
+        beforeMount() {
+          console.log("parent beforeMount");
+        },
+        mounted() {
+          console.log("parent mounted");
+        },
+        beforeDestroy() {
+          console.log("parent beforeDestroy");
+        },
+        destroyed(){
+          console.log('parent destroyed')
+        },
+        methods: {
+          hide() {
+            this.$emit("hide");
+            // this.items.push('baby')
+          },
+          appenChild(){
+              this.items.push('sweaty')
+          },
+        },
+      });
+      Vue.component("son", {
+        template: `<div>
+                        son：{{itemValue}}<br/>
+                        <slot></slot><br/>
+                        <slot name="sonSlot" :value="'master'"></slot>
+                      </div>`,
+        props: {
+          itemValue: {
+            type: String,
+            default: "",
+          },
+        },
+        beforeCreate() {
+          console.log("son beforeCreate");
+        },
+        created() {
+          console.log("son created");
+        },
+        beforeMount() {
+          console.log("son beforeMount");
+        },
+        mounted() {
+          console.log("son mounted");
+        },
+        beforeDestroy() {
+          console.log("son beforeDestroy");
+        },
+        destroyed(){
+          console.log('son destroyed')
+        },
+      });
+      let vm = new Vue({
+        el: "#app",
+        data() {
+          return {
+            show: true,
+          };
+        },
+        beforeCreate() {
+          console.log("vm beforeCreate");
+        },
+        created() {
+          console.log("vm created");
+        },
+        beforeMount() {
+          console.log("vm beforeMount");
+        },
+        mounted() {
+          console.log("vm mounted");
+        },
+        beforeUpdate(){
+            console.log('vm beforeUpdate')
+        },
+        updated(){
+            console.log('vm updated')
+        },
+        beforeDestroy() {
+          console.log("vm beforeDestroy");
+        },
+        destroyed(){
+          console.log('vm destroyed')
+        },
+        methods: {
+          hide() {
+            this.show = false;
+          },
+        },
+        
+      });
+    </script>
+  </body>
+</html>

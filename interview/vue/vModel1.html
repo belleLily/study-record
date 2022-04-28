@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VUE双向绑定</title>
+  </head>
+  <body>
+    <div id="app">
+      <input type="text" v-model="text" />
+      {{text}}
+    </div>
+    <script>
+      function Watch(vm, name, element) {
+        Dep.target = this;
+        this.name = name;
+        this.element = element;
+        this.vm = vm;
+        this.value = ''
+        this.update();
+        Dep.target = null;
+      }
+      Watch.prototype = {
+        get() {
+          this.value = this.vm[this.name];
+        },
+        update() {
+          this.get();
+          this.element.nodeValue = this.value;
+        },
+      };
+
+      function compile(vm, element) {
+        const reg = /\{\{(.*)\}\}/;
+        if (element.nodeType === 1) {
+          const attrs = element.attributes;
+          for (var i = 0; i < attrs.length; i++) {
+            if (attrs[i].nodeName === "v-model") {
+              const name = attrs[i].nodeValue;
+              element.addEventListener("input", function (e) {
+                vm[name] = e.target.value;
+              });
+              element.value = vm.data[name];
+              element.removeAttribute('v-model');
+            }
+          }
+        }
+        if (element.nodeType === 3) {
+          if (reg.test(element.nodeValue)) {
+            const name = RegExp.$1.trim();
+            new Watch(vm, name, element);
+          }
+        }
+      }
+
+      function nodeToFragment(vm, el) {
+        const fragment = document.createDocumentFragment();
+        while ((child = el.firstChild)) {
+          compile(vm, child);
+          fragment.appendChild(child);
+        }
+        return fragment;
+      }
+
+      function Dep() {
+        this.subs = [];
+      }
+
+      Dep.prototype = {
+        addSubs(item) {
+          this.subs.push(item);
+        },
+        notify() {
+          this.subs.forEach((sub) => sub.update());
+        },
+      };
+
+      function defineReactive(vm, key, value) {
+        const dep = new Dep();
+        Object.defineProperty(vm, key, {
+          get() {
+            if (Dep.target) {
+              dep.addSubs(Dep.target);
+            }
+            return value;
+          },
+          set(val) {
+            if (val === value) {
+              return;
+            }
+            value = val;
+            dep.notify();
+          },
+        });
+      }
+
+      function Vue(options) {
+        this.data = options.data;
+        for (let key of Object.keys(options.data)) {
+          defineReactive(this, key, options.data[key]);
+        }
+        const element = document.getElementById(options.el);
+        const dom = nodeToFragment(this, element);
+        element.appendChild(dom);
+      }
+
+      new Vue({
+        el: "app",
+        data: {
+          text: "BelleLily",
+        },
+      });
+    </script>
+  </body>
+</html>

@@ -241,3 +241,7 @@ export const getWeekOfMonday = (date) => {
   monday.setSeconds(0);
   return monday; //返回本周的周一的0时0分0秒
 };
+
+export function getMonthEndDay(year, month) {
+  return 32 - new Date(year, month - 1, 32).getDate();
+}

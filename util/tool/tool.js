@@ -143,7 +143,7 @@ export const getStyle = (element, attr) => {
   }
 };
 
-const toRGB = (color, opacity) => {
+export const toRGB = (color, opacity) => {
   color = color.replace(/#/g, "");
   let num = parseInt(color, 16);
   return `rgba(${num >> 16},${(num >> 8) & 255},${num & 255},${opacity})`;
@@ -182,4 +182,11 @@ export const encrypName = (name) => {
       : name.replace(/.(?=.)/g, "*");
   }
   return null;
+};
+
+export const clamp = (value, min, max) => {
+  if (value === null) {
+    return min;
+  }
+  return Math.min(Math.max(value, min), max);
 };
