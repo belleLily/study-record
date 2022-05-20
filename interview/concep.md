@@ -14,3 +14,8 @@ qiankun
 4、样式隔离
 5、JS沙箱，微应用之间全局变量，事件不冲突
 6、资源预加载
+
+
+### vue react 区别
+1. vue模版，react使用jsx
+2. vue声明式编程，react函数式编程

@@ -50,12 +50,12 @@ includes//返回Boolean，indexOf内部使用===，无法判断NaN
 flat(n) //flat默认拉平一层，参数表示拉平n层，Infinity
 flatMap((cur, index, arr) => { }) //返回双层数组
 
-对象
-super//当前对象的原型对象，只能用在对象的方法之中
-链判断运算符
+//对象
+//super//当前对象的原型对象，只能用在对象的方法之中
+//链判断运算符
 const firstName = message?.body?.user?.firstName || 'default';
 const headerText = response.settings.headerText ?? 'Hello, world!';//?? 左侧的值为null或undefined时，才会返回右侧的值。
-const headerText = response.settings.headerText || 'Hello, world!';//null、undefined、0、false
+const headerText1 = response.settings.headerText || 'Hello, world!';//null、undefined、0、false
 const animationDuration = response.settings?.animationDuration ?? 300;
 Object.is() // 判断两个对象是否相等，解决==（类型转换），===（-0，0，NaN)
 // 转Map

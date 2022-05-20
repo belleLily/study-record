@@ -1,4 +1,4 @@
-//1.构造函数People.prototype属性（指针）指向原型对象，这个对象使所有实例共享的属性和方法
+//1.构造函数People.prototype属性（指针）指向原型对象，这个对象使所有实例共享属性和方法
 //2.原型对象的contructor属性（指针）指回构造函数People
 //3.People.prototype.contrucotr = People
 function People() {
@@ -11,6 +11,7 @@ People.prototype.showType = function () {
 //1.实例对象person.__proto__指向构造函数People原型对象，所以可以访问People原型对象上所有属性和方法
 //2.person.__proto__ = People.prototype
 //3.person.constructor = People
+//4.实例对象本身具备构造函数的实例属性和方法
 let person = new People();
 //实例属性，实例方法
 person.name = "belleLily";
@@ -32,7 +33,6 @@ Woman.prototype = person; //new People()
 let w = new Woman();
 
 //组合式继承
-//先创建子类的实例对象，然后再将父类的方法通过call方法添加到this上，通过原型和构造函数的机制来实现
 function SuperType(name) {
   this.name = name;
   this.colors = ["red", "blue", "green"];
@@ -41,9 +41,12 @@ SuperType.prototype.sayName = function () {
   console.log(this.name);
 };
 function SubType(name, age) {
-  SuperType.call(this, name);
+  //继承属性
+  SuperType.call(this, name); //通过执行SuperType构造函数，每个实例形成自己的实例属性。不共享同一份colors（引用类型）
+  //我们实际上是在(未来将要)新创建的 SubType 实例的环境下调用了 SuperType 构造函数。 这样一来，就会在新 SubType 对象上执行 SuperType()函数中定义的所有对象初始化代码。结果， SubType 的每个实例就都会具有自己的 colors 属性的副本了。
   this.age = age;
 }
+//继承方法
 SubType.prototype = new SuperType();
 SubType.prototype.constructor = SubType;
 SubType.prototype.sayAge = function () {

@@ -80,10 +80,13 @@ O(n)
 ## watch
 
 监听引用类型需要深度监听`handler`,`deep`，拿不到 oldVal(此时 oldVal 和 val 指针指向同一块内存地址)
+如果需要拿到前后对比值，可以结合计算属性、序列化、反序列化生成新的对象，来避免此问题
+[watch监听对象得到前后对比值](https://blog.csdn.net/u011330018/article/details/107322733/)
 
 ## v-for
 
 `v-for` 优先级比 `v-if` 高，不建议一起使用，因为 for 循环每项都会执行 `v-if` 判断，性能不好
+v-for="(item, key, index) in object"
 
 ## 自定义事件
 
@@ -118,12 +121,14 @@ custom-component.vue
 
 ## $nextTick
 
-1. 在 task 或者 microtask 中推入一个 timerFunc，在当前调用栈执行完以后以此执行直到执行到 timerFunc，目的是延迟到当前调用栈执行完以后执行。
+1. 在 task 或者 microtask 中推入一个 timerFunc，在当前调用栈执行完以后直到执行到 timerFunc，目的是延迟到当前调用栈执行完以后执行。
 2. timerFunc 一个函数指针，指向函数将被推送到任务队列中，等到主线程任务执行完时，任务队列中的 timerFunc 被调用，
 3. 主要通过 Promise、MutationObserver 以及 setTimeout
 
 ## MVVM-数据驱动视图
-
+M - Model
+V - View
+VM - ViewModel
 ## slot
 
 1. 作用域插槽，slot 组件向父组件传值
@@ -148,7 +153,21 @@ Object.defineProperty
 
 1. 复杂数据类型（对象）深度监听，递归计算量大
 2. 无法监听新增/删除的属性（Vue.set,Vue.delete)
-3. 无法监听数组的变化（push,pop 等）
+3. 无法监听数组的变化，通过重新定义数组原型，进而改变自定义数组的基本方法（push,pop 等）
+```javascript
+const oldArrayProperty = Array.prototyp;
+const arrProto = Object.create(oldArrayProperty);
+['push', 'pop', 'unshift', 'shift', 'splice'].forEach(methodName=>{
+   arrProto[mthodName] = function(){
+      updateView();
+      oldArrayProperty[mthodName].call(this, ...arguments);
+   }
+})
+
+Array.isArray(target){
+   target.__proto__ = arrProto
+}
+```
 
 ## vdom
 
@@ -168,10 +187,13 @@ Object.defineProperty
 1. 触发网页跳转，监听浏览器前进后退，window.hashchange
 2. hash 变化不会刷新页面
 3. 不会提交到 server 端
-
+>history模式主要利用history API
+1. popstate事件
+2. history.pushState({}, null, '/detail')
 ## ajax 放在那个生命周期
 
 moutend。在 created,mounted 效果都是一样的，因为 js 是单线程。ajax 是异步任务，会被浏览器放进 eventLoop 里面，都会等主线程执行完毕再执行。而放在 mouted 里面，在 dom 渲染完进行异步请求，会有比较好的语义逻辑理解。
 
 ## 如何将组件所有 props 传递给子组件
 $props
+

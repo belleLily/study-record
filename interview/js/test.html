@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      // function People(name) {
+      //   this.name = name;
+      // }
+      // People.prototype.sayName = function () {
+      //   console.log(this)
+      //   // console.log(this.name);
+      // };
+      // People.prototype.sex = 1;
+
+      // const person = new People("wll");
+      // const person1 = new People("wll1");
+
+      // // console.log(person);
+      // // console.log(person1);
+
+      // function Woman() {
+      //   this.age = 18;
+      // }
+      // Woman.prototype = person;
+      // Woman.prototype.sayAge = function () {
+      //   // console.log(this)
+      //   // consle.log(this.age);
+      // };
+      // const grli = new Woman();
+      // // console.log(grli);
+      // grli.sayAge();
+
+      // const obj = Object.create(People.prototype, {
+      //   school: { value: "highSchool" },
+      // });
+      // // console.log(obj.sex);
+
+
+      // Function.prototype.call = function(context){
+      //   context = context || window;
+      //   context.fn = this;
+      //   let arg = [...arguments].slice(1);
+      //   // console.log(context)
+      //   // console.log(arg)
+
+      //   return context.fn(...arg)
+      // }
+
+      // Function.prototype.apply = function(){
+      //   const self = this;
+      //   const [context, ...args] = arguments
+      //   return function(){
+      //     self.apply(context,[...args,...arguments])
+      //   }
+      // }
+
+      // function add(c, d){
+      //   return this.a + this.b + c + d
+      // }
+      // const obj1 = {
+      //   a: 1,
+      //   b:2,
+      // }
+      // // const res = add.call(obj1, 3, 4)
+      // const res = add.bind(obj1, 3, 4)
+      // console.log(res)
+      // console.log(res())
+      const obj = {
+        a: {
+          name: 'wll'
+        },
+        b: 2
+      }
+      const obj1 = {
+        b: '2.1',
+        c: 3
+      }
+      const obj2 = Object.assign({},obj,obj1)
+      obj2.a.name = 4;
+      console.log(obj,obj1,obj2)
+    </script>
+  </body>
+</html>

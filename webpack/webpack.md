@@ -148,7 +148,7 @@ let config = {
 - bundle 最终多输出文件
 
 ## dev 环境优化打包速度
-
+ 
 1. 优化 babel-loader
 
 ```javascript
@@ -159,7 +159,6 @@ let config = {
     //exclude: path.resolve(__dirname, 'node_modules')
 }
 ```
-
 2. IgnorePlugin
   在插件中使用webpack.IgnorePlugin匹配到moment下的locale语言包，进行忽略处理，即不引入所有的locale下的语言包。在需要使用到具体的语言时，在代码中引入具体的语言包，避免引入无用模块[IgnorePlugin Compare noParse](https://blog.csdn.net/qq_39207948/article/details/113839069)
 3. noParse
@@ -173,6 +172,9 @@ let config = {
    新代码生效，网页不生效，状态不丢失
 8. DllPlugin
    动态链接库
+   >webpack内置DllPlugin
+   >DllPlugin打包出dll文件
+   >DllReferencePlugin使用dll文件
 
 ## prod 环境优化速度
 
@@ -185,7 +187,7 @@ let config = {
    publicPath
 7. 使用production模式
   自动压缩代码，vue/react等会自动删除调试代码
-  Tree-Shaking，没使用上的代码不被打包，只有在module静态引入，编译时生效实现Tree-shaking，commonjs动态引入执行时生效无法实现Tree-Shaking
+  Tree-Shaking，没使用上的代码不被打包，只有在(ES-Module)module静态引入，编译时生效实现Tree-shaking，commonjs动态引入执行时生效无法实现Tree-Shaking
   Scope Hosting，相互依赖的函数合并成一个，减少作用域的创建，ModuleConcatenationPlugin
 
 ## babel
@@ -203,3 +205,36 @@ let config = {
 
 ## plugin
 扩展插件
+
+### 前端代码为什么要进行构建和打包
+1、减少http请求次数，体积更小，加载更快（tree-shaking，压缩合并）
+2、将高级语法编译成浏览器识别的es5语法，编译高级语言和语法（ts，es6，模块化）
+3、兼容性和错误提示（polyfill，postcss，eslint）
+4、 统一、高效的开发环境，统一的构建流程和产出标准，集成公司构建规范（提测，上线）
+
+### module，chunk，bundle是什么以及区别
+module，模块可供引入使用的文件
+chunk，多个模块合并之后的或者代码分割splitChunk形成的代码块
+bundle，许多不同的模块生成，包含已经经过加载和编译过程的源文件的最终版本。打包构建输出的文件
+
+### loader和plugin的区别
+loader：webpack只能打包commonjs规范的js文件，针对其他文件类型，需要使用loader来进行打包，专注于转化文件，完成打包过程。
+plugin：打包优化到压缩，重新定义环境变量。处理各种类型的任务。
+
+### webpack如何实现懒加载
+动态导入。资源需要时再import
+
+### webpack常见性能优化
+1. 优化babel-loader
+2. happyPack多进程打包
+    js单线程，开启多进程打包，提高构建速度（多核CPU)
+3. ParallelUglifyPlugin多进程压缩JS
+### babel-runtime和babel-polyfill区别
+babel,synx(ES6->ES5)转换，箭头函数转function
+babel-polyfill，针对不同浏览器做了api兼容，比如新增Object.assign方法
+babel-runtime，将依赖的api本地隔离，例如用户安装的Promise和本地依赖的_Promise
+[知乎](https://zhuanlan.zhihu.com/p/58624930)
+
+### 如何进行线上调试
+1、本地起线上版本代码debugger调试
+2、sourcemap本地映射

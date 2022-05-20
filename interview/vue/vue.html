@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vue</title>
+  </head>
+
+  <style>
+    .msg_box {
+      pointer-events: none;
+    }
+  </style>
+
+  <body>
+    <div id="app" @click="handleClick">
+      <div class="msg_box" @click="handleClick1">{{msg}}</div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/es6-promise@4/dist/es6-promise.auto.js"></script>
+    <script src="https://cdn.staticfile.org/vue-router/2.7.0/vue-router.min.js"></script>
+    <script src="https://unpkg.com/vuex"></script>
+    <script>
+      let vm = new Vue({
+        el: "#app",
+        data: function () {
+          return {
+            msg: "Hello World",
+            dataObj: {
+              name: "wll",
+            },
+          };
+        },
+        computed: {
+          shiftDataObj() {
+            return JSON.parse(JSON.stringify(this.dataObj));
+          },
+        },
+        watch: {
+          shiftDataObj: {
+            handler(newV, oldV) {
+              console.log(newV, oldV);
+            },
+            deep: true,
+          },
+        },
+        methods: {
+          handleClick(e) {
+            // this.msg = "Hello World, I Love Ly";
+            // this.dataObj.name = "belleLily";
+            // e.stopPropagation();
+            console.log(0);
+          },
+          handleClick1() {
+            console.log(1);
+          },
+        },
+      });
+    </script>
+  </body>
+</html>

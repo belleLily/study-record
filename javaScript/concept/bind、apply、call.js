@@ -23,8 +23,7 @@ Function.prototype.call = function (context) {
   // for (let i = 1, len = arguments.length; i < len; i++) {  
   //   args.push(arguments[i]);
   // }
-  const result = context.fn(...args);
-  return result;
+  return context.fn(...args);
 };
 Function.prototype.apply = function (context, arr) {
   let context = context || window;
