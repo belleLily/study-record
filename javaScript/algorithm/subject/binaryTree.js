@@ -1,15 +1,15 @@
 function BinaryTree() {
+  // 根节点
+  this.root = null;
+
   // 生产节点对象
   var Node = function (key) {
     this.key = key;
     this.left = null;
     this.right = null;
-  }
-  // 根节点
-  this.root = null;
+  };
 
   // 插入节点的方法(递归)
-
   var insertNode = function (node, newNode) {
     if (newNode.key < node.key) {
       if (node.left === null) {
@@ -24,7 +24,7 @@ function BinaryTree() {
         insertNode(node.right, newNode);
       }
     }
-  }
+  };
 
   // 插入节点的接口
   this.insert = function (key) {
@@ -34,12 +34,12 @@ function BinaryTree() {
     } else {
       insertNode(this.root, newNode);
     }
-  }
+  };
 
   // 中序排序
   this.inOrderTraverse = function (callback) {
     inOrderTraverseNode(this.root, callback);
-  }
+  };
 
   var inOrderTraverseNode = function (node, callback) {
     if (node !== null && node !== undefined) {
@@ -47,12 +47,12 @@ function BinaryTree() {
       callback(node.key);
       inOrderTraverseNode(node.right, callback);
     }
-  }
+  };
 
   // 先序排序
   this.preOrderTraverse = function (callback) {
     preOrderTraverseNode(this.root, callback);
-  }
+  };
 
   var preOrderTraverseNode = function (node, callback) {
     if (node !== null && node !== undefined) {
@@ -60,12 +60,12 @@ function BinaryTree() {
       preOrderTraverseNode(node.left, callback);
       preOrderTraverseNode(node.right, callback);
     }
-  }
+  };
 
   // 后序排序
   this.postOrderTraverse = function (callback) {
     postOrderTraverseNode(this.root, callback);
-  }
+  };
 
   var postOrderTraverseNode = function (node, callback) {
     if (node !== null && node !== undefined) {
@@ -73,12 +73,12 @@ function BinaryTree() {
       postOrderTraverseNode(node.right, callback);
       callback(node.key);
     }
-  }
+  };
 
   // 二叉树查找给定的值
   this.search = function (value) {
     return searchNode(this.root, value);
-  }
+  };
 
   var searchNode = function (node, key) {
     if (node !== null && node !== undefined) {
@@ -92,8 +92,7 @@ function BinaryTree() {
     } else {
       return false;
     }
-  }
-
+  };
 }
 
 

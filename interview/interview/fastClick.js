@@ -6,8 +6,8 @@
 // 浏览器开发厂商为了识别这种事件，所以加入了300ms延迟的处理。
 
 // 禁用缩放
-// < meta name = "viewport" content = "width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
-兼容safari
+// <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+// 兼容safari
 window.onload = function () {
     // 阻止双击放大
     var lastTouchEnd = 0;

@@ -25,7 +25,7 @@
 // 100vw = 750px
 // 1px = 100vw/750
 // 100px= 10000vw/750=100vw/7.5
-// html:font-size->1rem->100vw/7.5=100px
+// html:font-size->1rem=100px->100vw/7.5
 // html {
-//     font-size: calc(10000vw / 750); 
+//     font-size: calc(10000vw / 750); //1rem等于100px
 // }

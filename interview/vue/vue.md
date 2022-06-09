@@ -2,8 +2,9 @@ vue 是构建用户界面的渐进式框架
 
 ### keepalive
 
-组件内部维护 cache,keys 两个变量进行缓存对象读取，如果缓存对象存在该组件实例，读取后将该实例推至队列末尾。否则存储该实例。
-同时 watch，include/exclude 的变化，实时更新 cache，keys。内部使用 pruneCacheEntry 的$destoryed 方法销毁缓存 vnode
+1. 组件内部维护 `cache`,`keys` 两个变量进行缓存对象读取
+2. 如果缓存对象存在该组件实例，读取后将该实例推至队列末尾，使用 `pruneCacheEntry` 的`$destoryed` 方法销毁缓存 vnode。否则存储该实例。
+3. 同时 watch`include`和`exclude` 的变化，实时更新 cache，keys。
 
 ### v-if v-show
 
@@ -36,16 +37,16 @@ var mount = Vue.prototype.$mount;
 Vue.prototype.$mount = function (el, hydrating)){
     ....// 函数劫持,原型上的$mount方法保存在mount属性上，然后原型上重新定义一个$mount方法
         //通过这种方式就可以在执行原有方法之前新增一些功能
-    return mount.call(this,el, hydrating))
+    return mount.call(this, el, hydrating))
 }
 ```
 
 compileToFunctions 主要是把模板编译成渲染函数并设置到 this.$options 上
 模版编译：解析器，优化器，代码生成器。
-解析器主要是将模板解析成 AST，优化器主要是遍历 AST 标记静态节点，这样再虚拟 DOM 中更新节点时，就不会重新渲染它了，而代码生成器就是把 AST 转化为代码字符串，从而转换成渲染函数。
+解析器主要是将模板解析成 AST，优化器主要是遍历 AST 标记静态节点，这样在虚拟 DOM 中更新节点时，就不会重新渲染它了，而代码生成器就是把 AST 转化为代码字符串，从而转换成渲染函数。
 
 `vm._update(vm._render(), hydrating);`
-\_update 作用是调用虚拟 DOM 的 patch 方法进行新旧对比，而\_render 则是生成一个新的 VNode 节点数，那么 vm.\_update(vm.\_render(), hydrating)就是将新的 VNode 和旧的 VNode 进行对比并更新 DOM
+_update 作用是调用虚拟 DOM 的 patch 方法进行新旧对比，而_render 则是生成一个新的 VNode 节点数，那么 vm._update(vm._render(), hydrating)就是将新的 VNode 和旧的 VNode 进行对比并更新 DOM
 
 ### 描述组件渲染和更新的过程
 
@@ -64,13 +65,13 @@ O(n)
 ### 双向数据绑定 v-model 实现原理
 
 对象挟持，
-观察者模式？？？
+发布订阅模式
 遍历实例 data 属性，重定义实例上 Object.defineProperty，每个属性生成自己的依赖收集对象 Dep。当模版编译读到该文本节点时，建立一个关于该属性的监听者，初次读值时收集其依赖。赋值时调用遍历 dep，依次调用其观察方法
 
-## 异步渲染
+## 异步渲染$nextTick
 
 [原理](https://blog.csdn.net/qq_42072086/article/details/106986201)
-当数据变化时，会调用Dep（依赖收集）里的notify方法，遍历watcher，通过调用watcher.update方法实现更新。但update方法并不会立即执行，而是将多个watcher放入queueWatcher队列中，并且去重。再通过nextTick异步执行flushScheduleWatcher刷新watcher队列。触发watcher.before(vue生命周期钩子beforeUpdate)，再执行watcher.run进行页面渲染，更新完再调用updated钩子
+当数据变化时，会调用 Dep（依赖收集）里的 notify 方法，遍历 watcher，通过调用 watcher.update 方法实现更新。但 update 方法并不会立即执行，而是将多个 watcher 放入 queueWatcher 队列中，并且去重。再通过 nextTick 异步执行 flushScheduleWatcher 刷新 watcher 队列。触发 watcher.before(vue 生命周期钩子 beforeUpdate)，再执行 watcher.run 进行页面渲染，更新完再调用 updated 钩子
 
 ## computed
 
@@ -81,7 +82,7 @@ O(n)
 
 监听引用类型需要深度监听`handler`,`deep`，拿不到 oldVal(此时 oldVal 和 val 指针指向同一块内存地址)
 如果需要拿到前后对比值，可以结合计算属性、序列化、反序列化生成新的对象，来避免此问题
-[watch监听对象得到前后对比值](https://blog.csdn.net/u011330018/article/details/107322733/)
+[watch 监听对象得到前后对比值](https://blog.csdn.net/u011330018/article/details/107322733/)
 
 ## v-for
 
@@ -94,12 +95,11 @@ v-for="(item, key, index) in object"
 
 ## 生命周期渲染
 
-created, vue 实例初始化完毕，构建 vnode（js 对象）完毕，created 是从父组件->子组件。mounted 时 vnode 渲染成真实 dom，页面渲染完毕，从子组件->父组件。
+created, vue 实例初始化完毕，构建 vnode（js 对象）完毕。mounted 时 vnode 渲染成真实 dom，页面渲染完毕。
 
 ## 自定义 v-model
 
 父子组件 v-model 实现双向通信。
-v-model 绑定计算属性，需要用对象，实现 get，set
 `<custom-component v-model="text"></custom-component>`
 custom-component.vue
 `<input type="text" :value="text" @input="$emit('change',$event.target.value)"/>`
@@ -119,33 +119,7 @@ custom-component.vue
    }
 </script>
 
-## $nextTick
 
-1. 在 task 或者 microtask 中推入一个 timerFunc，在当前调用栈执行完以后直到执行到 timerFunc，目的是延迟到当前调用栈执行完以后执行。
-2. timerFunc 一个函数指针，指向函数将被推送到任务队列中，等到主线程任务执行完时，任务队列中的 timerFunc 被调用，
-3. 主要通过 Promise、MutationObserver 以及 setTimeout
-
-## MVVM-数据驱动视图
-M - Model
-V - View
-VM - ViewModel
-## slot
-
-1. 作用域插槽，slot 组件向父组件传值
-
-## 动态（异步）组件
-
-通过 import 加载组件，编译时加载，动态异步加载
-
-## keep-alive
-
-keep-alive 组件，依次遍历节点，碰到 keep-alive 组件则去匹配 exclude 和 include 的规则，命中则放入 cache 中，标记是缓存组件，否则生成正常 vnode
-
-## mixin
-
-合并策略，组件共同逻辑复用，缺点无法跟踪来源，不利于维护
-
-## 组件化
 
 ## 响应式
 
@@ -154,6 +128,7 @@ Object.defineProperty
 1. 复杂数据类型（对象）深度监听，递归计算量大
 2. 无法监听新增/删除的属性（Vue.set,Vue.delete)
 3. 无法监听数组的变化，通过重新定义数组原型，进而改变自定义数组的基本方法（push,pop 等）
+
 ```javascript
 const oldArrayProperty = Array.prototyp;
 const arrProto = Object.create(oldArrayProperty);
@@ -168,9 +143,6 @@ Array.isArray(target){
    target.__proto__ = arrProto
 }
 ```
-
-## vdom
-
 ## 模版编译
 
 1. vue template compile 将模版编译成 render 函数，插件`vue-template-compiler`
@@ -187,13 +159,14 @@ Array.isArray(target){
 1. 触发网页跳转，监听浏览器前进后退，window.hashchange
 2. hash 变化不会刷新页面
 3. 不会提交到 server 端
->history模式主要利用history API
-1. popstate事件
-2. history.pushState({}, null, '/detail')
+history 模式主要利用 history API
+4. popstate 事件
+5. history.pushState({}, null, '/detail')
+
 ## ajax 放在那个生命周期
 
 moutend。在 created,mounted 效果都是一样的，因为 js 是单线程。ajax 是异步任务，会被浏览器放进 eventLoop 里面，都会等主线程执行完毕再执行。而放在 mouted 里面，在 dom 渲染完进行异步请求，会有比较好的语义逻辑理解。
 
 ## 如何将组件所有 props 传递给子组件
-$props
 
+$props
